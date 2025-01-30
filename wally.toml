@@ -1,7 +1,8 @@
 [package]
 name = "lfg-studio/secureprompt"
-version = "1.0.2"
+version = "1.0.3"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "server"
 
 [dependencies]
+promise = "evaera/promise@4.0.0"
