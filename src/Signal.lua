@@ -5,18 +5,18 @@ local function listInsert(list, ...)
 	local args = {...}
 	local newList = {}
 	local listLen = #list
-		
+
 	for i = 1, listLen do
 		newList[i] = list[i]
 	end
-		
+
 	for i = 1, #args do
 		newList[listLen + i] = args[i]
 	end
-		
+
 	return newList
 end
-	
+
 local function listValueRemove(list, value)
 	local newList = {}
 
@@ -25,32 +25,33 @@ local function listValueRemove(list, value)
 			table.insert(newList, list[i])
 		end
 	end
-		
+
 	return newList
 end
 
 function Signal.new()
 	local signal = {}
-	
+
 	local boundCallbacks = {}
 	local singleCallbacks = {}
-    local connections = {}
+	local connections = {}
 	local singleConnections = {}
-	
+	local waiting = false
+
 	function signal:Connect(cb)
 
 		boundCallbacks = listInsert(boundCallbacks, cb)
 
-        local newConnection = {Disconnect = nil, Connected = true}
+		local newConnection = {Disconnect = nil, Connected = true}
 
 		local function disconnect()
 			boundCallbacks = listValueRemove(boundCallbacks, cb)
-            newConnection.Connected = false
+			newConnection.Connected = false
 		end
 
-        newConnection.Disconnect = disconnect
+		newConnection.Disconnect = disconnect
 
-        connections = listInsert(connections, newConnection)
+		connections = listInsert(connections, newConnection)
 
 		return newConnection
 	end
@@ -72,9 +73,18 @@ function Signal.new()
 
 		return newConnection
 	end
-	
+
+	function signal:Wait()
+		waiting = true
+
+		repeat
+			task.wait()
+		until
+			not waiting
+	end
+
 	function signal:Fire(...)
-		
+
 		for i = 1, #boundCallbacks do
 			boundCallbacks[i](...)
 		end
@@ -87,19 +97,23 @@ function Signal.new()
 			connection:Disconnect()
 			connection = nil
 		end
+		
+		waiting = false
 
 	end
 
-    function signal:Destroy()
-        for _, connection in connections do
-            connection:Disconnect()
-        end
+	function signal:Destroy()
+		for _, connection in connections do
+			connection:Disconnect()
+		end
 
 		for _, connection in singleConnections do
 			connection:Disconnect()
 		end
-    end
-	
+		
+		waiting = false
+	end
+
 	return signal
 end
 
