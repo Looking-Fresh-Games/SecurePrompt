@@ -3,8 +3,8 @@
 	"tree": {
 		"$path": "src",
 
-		"Packages": {
-			"$path": "Packages"
+		"ServerPackages": {
+			"$path": "ServerPackages"
 		}
 	}
 }
