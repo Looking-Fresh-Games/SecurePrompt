@@ -116,7 +116,7 @@ function SecuredPrompt.Secure(prompt: ProximityPrompt)
         end
 
         -- Fire Triggered event
-        self.Triggered:Fire()
+        self.Triggered:Fire(player)
     end))
 
     return self
