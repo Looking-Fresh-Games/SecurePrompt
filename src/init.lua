@@ -101,6 +101,13 @@ function SecuredPrompt.Secure(prompt: ProximityPrompt)
 
     -- Fire the supplied callback if the HoldDuration was met.
     table.insert(self._connections, prompt.Triggered:Connect(function(player: Player)
+        -- Fire Triggered event if HoldDuration is 0
+        if prompt.HoldDuration == 0 then
+            self.Triggered:Fire(player)
+
+            return
+        end
+
         -- Exit if Player entry is missing.
         if self._activePlayers[player] == nil then
             return
