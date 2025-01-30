@@ -1,10 +1,6 @@
 {
 	"name": "SecurePrompt",
 	"tree": {
-		"$path": "src",
-
-		"ServerPackages": {
-			"$path": "ServerPackages"
-		}
+		"$path": "src"
 	}
 }
